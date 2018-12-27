@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
 
-public class Java9OptionalAdditions {
+public class Java9Additions {
     @Test
     public void givenOptional_whenPresent_thenShouldExecuteProperCallback() {
         // given

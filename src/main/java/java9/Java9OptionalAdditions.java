@@ -1,7 +1,12 @@
 package java9;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 
@@ -75,4 +80,51 @@ public class Java9OptionalAdditions {
         // then
         assertThat(result.get()).isEqualTo(defaultString);
     }
+
+    // In java 9 we added stream method to Optional class so we can treat optional elements as streams
+    @Test
+    public void givenOptionalOfSome_whenToStream_thenShouldTreatItAsOneElementStream() {
+        // given
+        Optional<String> value = Optional.of("a");
+
+        // when
+        List<String> collect = value.stream().map(String::toUpperCase).collect(Collectors.toList());
+
+        // then
+        assertThat(collect).hasSameElementsAs(List.of("A"));
+    }
+
+    //On the other hand, if Optional is not present, calling the stream() method on it will create an empty Stream:
+
+    @Test
+    public void givenOptionalOfNone_whenToStream_thenShouldTreatItAsZeroElementStream() {
+        // given
+        Optional<String> value = Optional.empty();
+
+        // when
+        List<String> collect = value.stream()
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
+
+        // then
+        assertThat(collect).isEmpty();
+    }
+
+    @Test
+    public void Immutable_Collection_Factory() {
+        // given
+        List<String> immutableList = List.of("a", "b", "c");
+
+        // when
+        //immutableCollection.add("d"); or immutableCollection.set(0, "A"); gives java.lang.UnsupportedOperationException
+
+        // List.of() is the equivalent of
+        List<String> mutableList = new ArrayList<>();
+        mutableList.add("a");
+        mutableList.add("b");
+        mutableList.add("c");
+        List<String> immutableList1 = Collections.unmodifiableList(mutableList);
+
+    }
+
 }
